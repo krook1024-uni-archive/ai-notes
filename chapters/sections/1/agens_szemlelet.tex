@@ -2,4 +2,158 @@
 
 \subsection{Az ágens fogalma}
 
+\begin{definicio}
+    Ágens.
+    Egy \textbf{ágens} (agent) bármi lehet, amit úgy tekinthetünk, mint ami az
+    \textbf{érzékelői} (sensors) segítségével érzékeli a \textbf{környezetét}
+    (environment), és \textbf{beavatkozói} (actuators) segítségével
+    megváltoztatja azt.
+
+    Az emberi ágensnek van szeme, füle és egyéb szervei az érzékelésre, és keze,
+    lába, szája és egyéb testrészei a beavatkozásra.
+
+    A robotágens kamerákat és infravörös távolsági keresőket használ
+    érzékelőként, és különféle motorokat beavatkozóként.
+
+    A szoftverágens billentyűleütéseket, fájltartalmakat és hálózati
+    adatcsomagokat fogad érzékelőinek bemeneteként, és képernyőn történő
+    kijelzéssel, fájlok írásával, hálózati csomagok küldésével avatkozik be a
+    környezetébe.
+
+    Azzal az általános feltételezéssel fogunk élni, hogy minden ágens képes
+    saját akcióinak érzékelésére (de nem mindig látja azok hatását).
+\end{definicio}
+
+\begin{definicio}
+    Érzékelés.
+    Az érzékelés (percept) fogalmat használjuk az ágens érzékelő bemeneteinek
+    leírására egy tetszőleges pillanatban.
+\end{definicio}
+
+\begin{definicio}
+    Ágens érzékelési sorozata.
+    Egy ágens érzékelési sorozata (percept sequence) az ágens érzékeléseinek
+    teljes története, minden, amit az ágens valaha is érzékelt. Általánosságban,
+    egy adott pillanatban egy ágens cselekvése az addig megfigyelt teljes
+    érzékelési sorozatától függhet. Ha az összes lehetséges érzékelési
+    sorozathoz meg tudjuk határozni az ágens lehetséges cselekvéseit, akkor
+    lényegében mindent elmondtunk az ágensről.
+\end{definicio}
+
+\begin{definicio}
+    Ágensfüggvény.
+    Matematikailag megfogalmazva azt mondhatjuk, hogy az ágens viselkedését az
+    ágensfüggvény (agent function) írja le, ami az adott érzékelési sorozatot
+    egy cselekvésre képezi le.
+\end{definicio}
+
+\begin{definicio}
+    Ágensprogram.
+    Egy mesterséges ágens belsejében az ágensfüggvényt egy ágensprogram (agent
+    program) valósítja meg.
+\end{definicio}
+
+\begin{megjegyzes}
+    Különbség ágensfüggvény és ágensprogram között.
+    Az ágensfüggvény egy absztrakt matematikai leírás, az ágensprogram egy
+    konkrét implementáció, amely az ágens architektúráján működik.
+\end{megjegyzes}
+
 \subsection{Az ágens jellemzése (teljesítmény, környezet, érzékelők, beavatkozók}
+
+\begin{definicio}
+    \textbf{TKBÉ} (PEAS) leírás.
+    Egy ágens tervezése során az első lépésnek mindig a feladatkörnyezet lehető
+    legteljesebb meghatározásának kell lennie.
+
+            \begin{tabularx}{\textwidth}{|X|X|X|X|X|}
+            \hline
+            \textbf{Ágenstípus} &
+            \textbf{Tel-jesítmény-mérték (Performance)} &
+            \textbf{Környezet (Environment)} &
+            \textbf{Beavatkozók (Actuators)} &
+            \textbf{Érzékelők (Sensors)}
+            \\\hline
+            Taxisofőr &
+            Biztonságos, gyors, törvényes, kényelmes utazás, maximum haszon &
+            Utak, egyéb forgalom, gyalogosok, ügyfelek &
+            Kormány, gáz, fék, index, kürt, kijelző &
+            Kamerák, hangradas, sebességmérő, GPS, kilométeróra, motorérzékelők,
+            billentyűzet
+            \\\hline
+        \end{tabularx}
+\end{definicio}
+
+\begin{definicio}
+    Teljesen megfigyelhető környezet.
+
+    Ha az ágens szenzorai minden pillanatban hozzáférést nyújtanak a környezet
+    teljes állapotához, akkor azt mondjuk, hogy a környezet teljesen
+    megfigyelhető.
+\end{definicio}
+
+\begin{definicio}
+    Determinisztikus (deterministic) vagy sztochasztikus (stochastic).
+
+    Amennyiben a környezet következő állapotát jelenlegi állapota és az ágens
+    által végrehajtott cselekvés teljesen meghatározza, akkor azt mondjuk, hogy
+    a környezet determinisztikus, egyébként sztochasztikus.
+\end{definicio}
+
+\begin{definicio}
+    Epizódszerű (episodic) vagy sorozatszerű (sequential) környezet.
+
+    Epizódszerű környezetben az ágens tapasztalata elemi "epizódokra" bontható.
+    Minden egyes epizód az ágens észleléseiből és egy cselekvéséből áll. Nagyon
+    fontos, hogy a következő epizód nem függ az előzőben végrehajtott
+    cselekvésektől.  Epizódszerű környezetekben az egyes epizódokban az akció
+    kiválasztása csak az aktuális epizódtól függ.
+\end{definicio}
+
+\begin{definicio}
+    Statikus (static) vagy dinamikus (dynamic) környezet.
+
+    Ha a környezet megváltozhat, amíg az ágens gondolkodik, akkor azt mondjuk,
+    hogy a környezet az ágens számára dinamikus; egyébként statikus.
+\end{definicio}
+
+\begin{definicio}
+    Diszkrét (discrete) vagy folytonos (continuous) környezet.
+
+    A diszkrét/folytonos felosztás alkalmazható a környezet állapotára, az
+    időkezelés módjára, az ágens észleléseire, valamint cselekvéseire. Például
+    egy diszkrét állapotú környezet, mint amilyen a sakkjáték, véges számú
+    különálló állapottal rendelkezik. A sakkban szintén diszkrét az akciók és
+    cselekvések halmaza. A taxivezetés folytonos állapotú és idejű probléma: a
+    sebesség, a taxi és más járművek helye folytonos értékek egy tartományát
+    járja végig a folytonos időben.
+\end{definicio}
+
+\begin{definicio}
+    Egyágenses (single agent) vagy többágenses (multiagent) környezet.
+
+    Az egyágenses és többágenses környezetek közötti különbségtétel egyszerűnek
+    tűnhet. Például a keresztrejtvényt megfejtő ágens önmagában nyilvánvalóan
+    egyágenses környezetben van, míg egy sakkozó ágens egy kétágensesben.
+    Vannak azonban kényes kérdések. Először is: leírtuk azt, hogy egy entitás
+    hogyan tekinthető ágensnek, ugyanakkor nem magyaráztuk meg, mely entitások
+    tekintendők ágensnek. Egy $A$ ágensnek (például a taxisofőrnek) egy $B$
+    objektumot (egy másik járművet) ágensnek kell tekintenie, vagy egyszerűen
+    egy sztochasztikusan viselkedő dolognak, a tengerparti hullámokhoz vagy a
+    szélben szálló falevelekhez hasonlatosan? A választás kulcsa az, hogy vajon
+    $B$ viselkedése legjobban egy $A$ viselkedésétől függő teljesítménymérték
+    maximalizálásával írhatóe le. Például a sakkban a $B$ ellenfél saját
+    teljesítménymértékét próbálja maximalizálni, amely – a sakk szabályainak
+    következtében – A teljesítménymértékét minimalizálja. Így a sakk egy
+    versengő (\textbf{competitive}) többágenses környezet. Másrészről, a taxi
+    vezetési környezetben az ütközések elkerülése az összes ágens
+    teljesítménymértékét maximálja, így az részben kooperatív
+    (\textbf{cooperative}) többágenses környezet.  Emellett részben versengő
+    is, hiszen például csak egy autó tud egy parkolóhelyet elfoglalni. A
+    többágenses környezetekben felmerülő ágenstervezési problémák gyakran
+    egészen mások, mint egyágenses környezetekben. Többágenses környezetekben
+    például a kommunikáció (communication) gyakran racionális viselkedésként
+    bukkan fel; egyes részlegesen megfigyelhető versengő környezetekben a
+    sztochasztikus viselkedés racionális, hiszen így elkerülhetők a
+    megjósolhatóság csapdái.
+\end{definicio}

@@ -7,7 +7,14 @@
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
 \usepackage[magyar]{babel}
-\usepackage{amsmath, amssymb}
+\usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{titlesec}
+\usepackage{algorithmicx}
+\usepackage{parskip}
+\usepackage{tabularx}
+\usepackage{hyperref}
 
 % document settings
 \setlength{\parindent}{0cm}
@@ -22,6 +29,34 @@
     \def\svgwidth{\columnwidth}
     \import{./figures/}{#1.pdf_tex}
 }
+
+% Environments
+\makeatother
+% For box around Definition, Theorem, \ldots
+\usepackage{mdframed}
+\mdfsetup{skipabove=1em,skipbelow=0em}
+\theoremstyle{definition}
+\newmdtheoremenv[nobreak=true]{definicio}{Definíció}
+\newmdtheoremenv[nobreak=true]{pelda}{Példa}
+\newmdtheoremenv[nobreak=true]{megjegyzes}{Megjegyzés}
+\newmdtheoremenv[nobreak=true]{lemma}{Lemma}
+\newmdtheoremenv[nobreak=true]{tetel}{Tétel}
+\newmdtheoremenv[nobreak=true]{informacio}{Információ}
+\newmdtheoremenv[nobreak=true]{konkluzio}{Konkluzio}
+\newmdtheoremenv[nobreak=true]{sejtes}{Sejtés}
+\newmdtheoremenv[nobreak=true]{allitas}{Állítás}
+\newmdtheoremenv[nobreak=true]{tulajdonsagok}{Tulajdonságok}
+
+\newtheorem*{ismetles}{Ismétlés}
+\newtheorem*{bizonyitas}{Bizonyítás}
+\newtheorem*{gyakorlas}{Gyakorlás}
+\newtheorem*{problema}{Probléma}
+\newtheorem*{terminologia}{Terminológia}
+\newtheorem*{spec}{Speciálisan}
+\makeatletter
+
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\dom}{dom}
 
 \pdfsuppresswarningpagegroup=1
 

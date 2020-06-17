@@ -2,6 +2,112 @@
 
 \subsection{Az állapottér fogalma}
 
+Az állapottér-reprezentáció az egyik leggyakrabban használt reprezentációs mód
+ami egy probléma formális megadására szolgál.
+
+\begin{definicio}
+    Probléma.
+    Egy \textbf{probléma} (problem) formális megragadásához az alábbi négy
+    komponensre van szükség:
+
+    \begin{itemize}
+        \item \textbf{kiinduló állapot}:
+            amiből az ágens kezdi a cselekvéseit,
+        \item \textbf{cselekvések halmaza}:
+            ágens rendelkezésére álló lehetséges cselekvések,
+        \item \textbf{állapotátmenet-függvény}:
+            visszaadja a rendezett $\langle$ cselekvés, utódállapot $\rangle$
+            párok halmazát (Egy alternatív megfogalmazás az \textbf{operátor}ok
+            egy halmaza, amelyeket egy állapotra alkalmazva lehet az
+            utódállapotokat generálni.) lásd még:
+            \textit{\ref{operator-alkalmazasi}. Definíció}
+        \item \textbf{állapottér}: A kezdeti állapot és az
+            állapotátmenet-függvény együttesen implicit módon definiálják a
+            probléma \textbf{állapotteré}t: azon állapotok halmazát, amelyek a
+            kiinduló állapotból elérhetők.
+    \end{itemize}
+\end{definicio}
+
+\begin{definicio}\label{operator-alkalmazasi}
+    Operátor alkalmazási előfeltétel teszt.
+    Ahhoz, hogy meggyőződjünk arról, hogy egy adott állapotra egy adott
+    operátor alkalmazható, előbb meg kell vizsgálnunk, hogy az állapotra
+    alkalmazható-e az operátor. Ezt a vizsgálódást operátor alkalmazási
+    előfeltétel tesztnek nevezzük.
+\end{definicio}
+
+\begin{definicio}
+    Célteszt.
+    A célteszt ellenőrzi a célfeltételek teljesülését egy adott állapotban.
+\end{definicio}
+
 \subsection{Az állapottérgráf}
 
+\begin{definicio}
+    Állapottérgráf.
+    Az állapottér egy gráfot alkot,
+    amelynek csomópontjai az állapotok és a csomópontok közötti élek a
+    cselekvések.
+
+
+\end{definicio}
+
+\begin{definicio}
+    Állapottér útja.
+    Az \textbf{állapottér egy útja} az állapotok egy sorozata, amely
+    állapotokat a cselekvések egy sorozata köt össze.
+\end{definicio}
+
+\begin{definicio}
+    Állapottér-reprezentációs gráf bonyolultsága.  Egy állapottér-reprezentált
+    probléma megoldásának sikerét jelentősen befolyásolja a reprezentációs gráf
+    bonyolultsága:
+
+    \begin{itemize}
+        \item a csúcsok száma,
+        \item az egy csúcsból kiinduló élek száma,
+        \item a hurkok és körök száma és hossza.
+    \end{itemize}
+
+    Ezért célszerű minden lehetséges egyszerűsítést végrehajtani. Lehetséges
+    egyszerűsítések:
+
+    \begin{itemize}
+        \item a csúcsok számának csökkentése — ügyes reprezentációval az
+            állapottér kisebb méretű lehet;
+        \item az egy csúcsból kiinduló élek számának csökkentése — az
+            operátorok értelmezési tartományának alkalmas megválasztásával
+            érhető el;
+        \item a reprezentációs gráf fává alakítása — a hurkokat, illetve
+            köröket „kiegyenesítjük”
+    \end{itemize}
+\end{definicio}
+
+% TODO
+
 \subsection{Költség és heurisztika fogalmak}
+
+\begin{definicio}
+    Lépésköltség.
+    Az $x$ állapotból az $y$ állapotba vezető $cs$ cselekvés
+    \textbf{lépésköltség}e (step cost) legyen $lk(x, cs, y)$.  Tételezzük fel,
+    hogy a lépésköltség nemnegatív.
+\end{definicio}
+
+\begin{definicio}
+    Útköltség-függvény.
+    Egy \textbf{útköltség-függvény}, egy olyan függvény amely az állapottér
+    minden útjához hozzárendel egy költséget.
+\end{definicio}
+
+\begin{definicio}
+    Megoldás.
+    Egy út, amely a kiinduló állapotból egy célállapotba vezet.
+\end{definicio}
+
+\begin{definicio}
+    Optimális megoldás.
+    A legkisebb útköltségű megoldás.
+\end{definicio}
+
+% TODO

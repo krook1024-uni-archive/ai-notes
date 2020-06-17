@@ -2,6 +2,140 @@
 
 \subsection{A játékok reprezentációja}
 
+A továbbiakban a
+\begin{itemize}
+    \item teljesen megfigyelhető,
+    \item véges,
+    \item determinisztikus,
+    \item kétszemélyes,
+    \item zérusösszegű
+\end{itemize}
+játékokkal foglalkozunk.
+
+\begin{definicio}
+    Játék reprezentációja.
+    Egy játék reprezentációja megadható a
+    \[
+        \langle
+        \mathcal{B},
+        b_0,
+        \mathcal{J},
+        \mathcal{V},
+        \hat{v},
+        \mathcal{L}
+        \rangle
+    \]
+    rendezett hatossal, ahol:
+    \begin{itemize}
+        \item $\mathcal{B}$: a játékállások halmaza,
+        \item $b_0$: a kezdőállás, ahol $b_0 \in \mathcal{B}$,
+        \item $\mathcal{J}$: a játékosok halmaza, ahol $\card \mathcal{J} = 2$,
+        \item $\mathcal{V}$: a végállások halmaza, ahol $\mathcal{V} \subseteq
+            \mathcal{B}$,
+        \item $\hat{v}$: egy $\mathcal{V} \to \{-1, 0, 1\} $
+            függvény,
+        \item $\mathcal{L}$: a lépések halmaza.
+    \end{itemize}
+\end{definicio}
+
+\begin{definicio}
+    Nyertes.
+    Végállásban a $\hat{v}$ függvény határozza meg, hogy melyik
+    játékos nyert:
+     \[
+        \hat{v}(b) =
+        \begin{cases}
+            1 & \text{ha $b$ állásban a következő játékos nyer} \\
+            1 & \text{ha $b$ állásban a következő játékos veszít} \\
+            -1 & \text{egyébként (döntetlen esetén)}
+        \end{cases}
+    .\]
+\end{definicio}
+
+\begin{definicio}
+    Lépés.
+    Minden $l \in \mathcal{L}$ egy $\mathcal{B} \to \mathcal{B}$
+    parciális függvény.
+
+\end{definicio}
+
+\begin{definicio}
+    Játék állapottere.
+    Legyen $\langle \mathcal{B}, b_0, \mathcal{J}, \mathcal{V}, \hat{v},
+    \mathcal{L} \rangle$ egy játék reprezentációja. Ekkor a \textbf{játék
+    állapottere} $\langle \mathcal{A}, a_0, \mathcal{C}, \mathcal{O} \rangle$
+    definiálható a következőképpen:
+     \begin{itemize}
+         \item $\mathcal{A} = \mathcal{B} \times \mathcal{J}$;
+         \item $a_0 = \langle b_0, j_0 \rangle$, ahol $j_0 \in \mathcal{J}$ a kezdőjátékos;
+         \item $\mathcal{C} = \{\langle b, j \rangle : \langle b, j \rangle \in A \land b \in \mathcal{V}\} $
+         \item $\mathcal{O} = \{o_l : l \in \mathcal{L}\}$, ahol $o_l :
+             \mathcal{A} \to \mathcal{A}$, úgy hogy
+             \begin{itemize}
+                 \item $\dom(o_l) = \{ \langle b, j \rangle : b \in \dom(l)\}$
+                 \item $o_l(\langle b, j \rangle) = \langle l(b), j'\rangle$
+                 \item  $j' \in \left(\mathcal{J} \setminus  \{j\}
+                     \right) $
+             \end{itemize}
+
+     \end{itemize}
+\end{definicio}
+
+\begin{definicio}
+    Közvetlen elérhetőség.
+    Az $a \in \mathcal{A}$ állapotból az $a' \in \mathcal{A}$ állapot
+    \textbf{közvetlenül elérhető}, ha van olyan $o_l \in \mathcal{O}$,
+    amely esetén \[
+        a \in \dom(o_l) \text{  és  } o_l(a) = a'
+    \]
+    és ezt $a \Rightarrow a'$ alakban jelöljük.
+\end{definicio}
+
+\begin{definicio}
+    Elérhetőség.
+    $Az a \in \mathcal{A}$ állapot az $a' \in \mathcal{A}$ állapot
+    \textbf{elérhető} ($a \Rightarrow^* a'$), ha
+    \begin{itemize}
+        \item $a=a'$, vagy
+        \item van olyan  $a_1, a_2, \ldots, a_k$ állapotsorozat, hogy
+            $a_1=a, a_k=a'$ továbbá \[
+                a_i \Rightarrow a_{i+1} \text{ minden }
+                i \in \{1, \ldots, k-1\} \text{ esetén}
+            .\]
+    \end{itemize}
+\end{definicio}
+
 \subsection{A játékfa}
 
+\begin{definicio}
+    Játékfa.
+    Legyen $\langle \mathcal{B}, b_0, \mathcal{J}, \mathcal{V}, \hat{v},
+    \mathcal{L} \rangle$ egy játék reprezentációja és $j_0 \in \mathcal{J}$ a
+    kezdőjátékos. Ekkor a játékfa olyan fa, melynek csúcsaihoz a játék
+    állapotait rendeljük:
+    \begin{itemize}
+        \item a fa gyökere a $\langle a_0, j_0 \rangle$ állapottal címkézett csúcs,
+        \item a fa levélelemei olyan $\langle b, j \rangle$ állapottal
+            címkézett csúcsok, ahol  $b \in \mathcal{V}$
+        \item a fa $\langle b, j \rangle$ állapottal címkézett nem levélcsúcsának
+            gyermekeit olyan $\langle b', j' \rangle$ címkéjű csúcsok alkotják, ahol
+            $\langle b, j \rangle \Rightarrow \langle b', j' \rangle$
+    \end{itemize}
+\end{definicio}
+
+\megjegyzes{A játékfa a játék állapotterének gráfját fává egyenesíti ki,
+egy-egy állapot a fában több csúcs címkéjeként is szerepelhet.}
+
 \subsection{Nyerő stratégia}
+
+\begin{definicio}
+    Stratégia.
+    Játékterv, ami minden olyan állásban, amikor ő következik, megmondja a
+    játékosnak, hogy mit lépjen.
+\end{definicio}
+
+\begin{definicio}
+    Nyerő stratégia.
+    Játékterv, ami minden olyan állásban, amikor ő következik, megmondja a
+    játékosnak, hogy mit lépjen.
+\end{definicio}
