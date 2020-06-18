@@ -1,3 +1,65 @@
 \section{Döntési fák}
 
+\begin{definicio}
+    Információs rendszer.
+    Egy {\bf információs rendszer} alatt egy $\mathcal{I} = \left<S, A, V, f \right>$
+    négyest értünk, ahol
+    \begin{itemize}
+        \item $S$ az objektumok halmaza,
+        \item $A = \{a_1, a_2, \ldots a_n\}$ attribútumok véges nemüres
+            halmaza, ahol minden $a \in A$ attribútomhoz tartozik egy nemüres
+            $V_a$ értékhalmaz (tartomány)
+        \item $V$ az attribútumértékek halmaza: $V = \cup^k_{i=1} V_{a_i}$
+        \item $f: S \times A \to V$ függvény úgy, hogy \[
+                f(s, a) \in V_a \text{ minden } s \in S \text{ és }
+                a \in A \text{ esetén}
+        .\]
+    \end{itemize}
+\end{definicio}
+
+\begin{definicio}
+    Döntési tábla.
+    {\bf Döntési tábla} alatt olyan $\left<\mathcal{I}, d \right>$
+    rendezett párt értünk, ahol
+    \begin{itemize}
+        \item $\mathcal{I} = \left<S, A, V, f \right>$ egy információs
+            rendszer,
+        \item $d\in A$ a {\bf döntési attribútum}.
+    \end{itemize}
+
+    Ekkor az attribútumok $C = A \setminus \{d\}$ részhalmaza a {\bf feltétel
+    attribútumok} (condition attributes) halmaza.
+\end{definicio}
+
 \subsection{Az ID3 algoritmus}
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetKwFunction{FIDthree}{ID3}
+    \SetKwProg{Fn}{Function}{:}{}
+    \Fn{\FIDthree{ $\mathcal{I}, d, S', C', b$ }}
+    {
+        \If{$S' = \varnothing$}{
+            \KwRet{new-node-with-label($b$)}\;
+        }
+
+        $m \gets$ majority$(S', d)$ \;
+
+        \If{ $A = \varnothing$ {\bf or} $\forall s \in S' : (f(s, d) = m)$}{
+            \KwRet{new-node-with-label($m$)} \;
+        }
+
+        $a \gets$ select$(A)$ \;
+        $C'' \gets C'\setminus \{a\} $ \;
+        $r \gets $ new-node-with-label$(a)$ \;
+
+        \ForAll{$v \in V_a$}{
+            $S'' \gets \{u : u \in S' \land f(u, a) = v\}$ \;
+            $t \gets$ \FIDthree{$\mathcal{I}, d, S'', C'', m$} \;
+            add-edge$(r, t, v)$ \;
+        }
+
+        \KwRet{r}\;
+    }
+    \caption{ID3}
+\end{algorithm}
