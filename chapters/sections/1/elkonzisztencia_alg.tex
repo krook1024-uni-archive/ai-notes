@@ -1,6 +1,78 @@
 \section{Élkonzisztencia algoritmusok}
 
 \begin{definicio}
+    Legyen $\mathcal{V}$ változók egy tetszőleges halmaza, $\mathcal{D}$ pedig
+    egy olyan leképezés, amely minden $x \in \mathcal{V}$ változóhoz egy
+    $\mathcal{D}(x)$-el jelölt halmazt (tartományt) rendel.
+
+    Tetszőleges két különböző $x \in \mathcal{V}$ és $y \in \mathcal{V}$ változó
+    közti bináris kényszer egy $\mathcal{D}(x)$ és $\mathcal{D}(y)$ feletti
+    bináris reláció: \[
+        R_{x,y} \subseteq  \mathcal{D}(x) \times \mathcal{D}(y)
+    .\]
+
+    Jelöljük $R^{-1}_{x,y}$ formában az $R_{x,y}$ reláció inverzét: \[
+        R^{-1}_{x,y} = \{
+            (b,a) : (a,b) \in R_{x,y}
+        \}
+    .\]
+\end{definicio}
+
+\begin{definicio}
+    Véges, bináris kényszerkielégítési probléma.
+    Egy {\bf véges, bináris kényszerkielégítése probléma} alatt olyan
+    $\left<\mathcal{V}, \mathcal{D}, \mathcal{C} \right>$ rendezett hármast
+    értünk, ahol
+    \begin{itemize}
+        \item $\mathcal{V}$ változók egy véges, nemüres halmaza
+        \item $\mathcal{D}(x)$ minden $x \in \mathcal{V}$ változó esetén egy
+            véges halmaz(tartomány)
+        \item $\mathcal{C}$ a $\mathcal{V}$-beli változók feletti bináris
+            kényszerek halmaza, úgy hogy
+            \begin{itemize}
+                \item ha $R_{x_y} \in \mathcal{C}$ és $R'_{x,y} \in
+                    \mathcal{C}$ akkor $R_{x,y} = R'_{x,y}$.
+                \item ha $R_{x_y} \in \mathcal{C}$ akkor $R_{y,x} \in
+                    \mathcal{C}$ és $R_{y,x} = R^{-1}_{x,y}$.
+            \end{itemize}
+    \end{itemize}
+\end{definicio}
+
+\begin{definicio}
+    Gráf reprezentáció.
+    Egy $\left<\mathcal{V}, \mathcal{D}, \mathcal{C} \right>$(nem feltétlenül
+    véges) {\bf bináris kényszerkielégítési probléma gráf reprezentációja}
+    egy olyan $\left<N, E \right>$ pár, ahol:
+    \begin{itemize}
+        \item $N = \{n_v : v \in \mathcal{V}\}$ alkotja a gráf csúcsait,
+        \item $E = \{
+                (n_x, n_y) : R_{x,y} \in \mathcal{C}
+            \}$ alkotja a gráf irányított éleit.
+    \end{itemize}
+
+    \begin{megjegyzes}
+        Mivel $R_{x,y}$ és  $R_{y,x}$ bináris kényszerek ugyanazt fejezik ki,
+        ezért az irányított élek helyett irányítatlan éleket tartalmazó gráfot
+        szokás használni.
+
+        Annak, hogy $R_{x,y}$ és  $R_{y,x}$ együtt szerepel a kényszerek között,
+        a később bemutatott algoritmusokban lesz jelentősége.
+    \end{megjegyzes}
+\end{definicio}
+
+\begin{definicio}
+    Nem bináris kényszerek.
+
+    {\bf Unáris kényszerek:} Az unáris kényszerek egyetlen változó értékét
+    korlátoznák. A helyett, hogy ezt kényszerként jelenítenénk meg,
+    kifejezhetjük azzal, hogy a változóhoz rendelt tartomány elemeiként eleve
+    csak az unáris kényszernek megfelelő értékeket választunk.
+
+    {\bf Magasabb rendű kényszerek:}  A magasabb rendű kényszerek mindig
+    kiválthatók bináris kényszerekkel újabb változók bevezetése mellett.
+\end{definicio}
+
+\begin{definicio}
     Kényszerek terjesztése.
     A \textbf{kényszerek terjesztése} során egy tekintett változó értékére
     vonatkozó megszorítás következményeit a vele kényszerek útján kapcsolatban
