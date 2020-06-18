@@ -1,7 +1,71 @@
 \section{Lépésajánló algoritmusok}
 
+\begin{definicio}
+    Hasznosságfügvény.
+
+    A {\bf hasznosságfügvény} egy becslés, de elávrjuk, hogy végállásban pontos
+    legyen. Formálisan: \[
+        h  : \mathcal{A} \to [-m, m] \text{ ahol } m \in \mathbb{R}^+
+        \text{ továbbá ha } b \in \mathcal{V} \text{ akkor }
+        h(b,j) = m \cdot \hat{v}(b)
+    .\]
+
+    Ha $h(b,j) > h(b', j)$ akkor a $b$ állás a $j$ (lépni következő) játékos
+    számára kedvezőbb, mint a $b'$ állás.
+
+    Legyen $h$ egy hasznosságfüggvény, ekkor $h_i$ az $i \in \mathcal{J}$ játékos
+    hasznosságfüggvénye, ha \[
+        h_i(a,j) = \begin{cases}
+            h(a,j) & \text{ ha } i = j \\
+            -h(a,j) & \text{ egyébként.}
+        \end{cases}
+    \]
+\end{definicio}
+
 \subsection{MinMax módszer}
+
+Az $b \in \mathcal{B}$ állás hasznossága $t \in \mathcal{J}$ támogatott játékos
+számára ha $j \in \mathcal{J}$ játékos következik lépni, $k \in \mathbb{N}$
+mélységi korláttal rekurzívan a következőképpen számítható:
+\[
+    f(b, j, t, k) =
+    \begin{cases}
+        h_t(b,j) & \text{ ha } b \in \mathcal{V} ,\\
+        h_t(b,j) & \text{ ha } k = 0 ,\\
+        \min \{ f(b', j', t, k-1) : \left<b, j \right> \Rightarrow \left<b', j' \right>\}
+        & \text{ ha } t \neq j ,\\
+        \max \{ f(b', j', t, k-1) : \left<b, j \right> \Rightarrow \left<b', j' \right>\}
+        & \text{ ha } t = j.
+    \end{cases}
+\]
 
 \subsection{NegaMax módszer}
 
+Az $b \in \mathcal{B}$ állás hasznossága $j \in \mathcal{J}$ (lépni következő)
+játékos számára $k \in \mathbb{N}$ mélységi korláttal rekurzívan a következőképpen
+számítható: \[
+    \hat{f} (b, j, k) = \begin{cases}
+        h(b,j) & \text{ ha } b \in \mathcal{V},\\
+        h(b,j) & \text{ ha } k = 0,\\
+        max \{
+            -\hat{f}(b', j', k-1) : \left<b,j \right> \Rightarrow \left<b',j' \right>
+        \}
+               & \text{ egyébként.}
+    \end{cases}
+\]
+
 \subsection{Alfa-béta nyesés}
+
+A gyakorlatban a MinMax algoritmus javított változatát szokás használni, az
+alfa-béta nyesést.
+
+\begin{definicio}
+    Az ajánlott lépés.
+    A $b \in \mathcal{B}$ állásban {\bf ajánlott lépés} a $j \in \mathcal{J}$
+    (lépni következő) játékos számára olyan $l \in \mathcal{L}$ lépés, amely esetén
+    \begin{itemize}
+        \item $b \in \dom l$,
+        \item $o_l\left(\left<b,j \right> \right) = \left<b', j' \right>$, és
+        \item $f(b,j,j,k) = f(b', j', j, k-1)$.
+    \end{itemize}
+\end{definicio}
