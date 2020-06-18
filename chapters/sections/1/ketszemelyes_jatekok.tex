@@ -129,13 +129,46 @@ egy-egy állapot a fában több csúcs címkéjeként is szerepelhet.}
 \subsection{Nyerő stratégia}
 
 \begin{definicio}
+    Játszma.
+    Egy {\bf játszma} egy olyan lépéssorozat, amely a $\left<b_0, j_0 \right>$
+    kezdőállapotból valamely $\left<b,j \right> \in \mathcal{C}$ célállapotba
+    vezet. (Egy a gyökértől valamely levélcsúcsig vezető út a játékfában).
+\end{definicio}
+
+\begin{definicio}
     Stratégia.
     Játékterv, ami minden olyan állásban, amikor ő következik, megmondja a
     játékosnak, hogy mit lépjen.
+
+    A $j\in\mathcal{J}$ játékos {\bf stratégiája} olyan $S_j : \{\left<b,j
+    \right> : \left<b,j \right> \in \mathcal{A}\} \to \mathcal{O}$ leképezés
+    (döntési terv), amely $j$ számára előírja, hogy a játék azon állapotaiban,
+    ahol  $j$ a lépni következő játékos, a megtehető lépések közül melyiket
+    lépje meg.
 \end{definicio}
 
 \begin{definicio}
     Nyerő stratégia.
-    Játékterv, ami minden olyan állásban, amikor ő következik, megmondja a
-    játékosnak, hogy mit lépjen.
+
+    A $j \in \mathcal{J}$ játékos egy $S_j$ stratégiája {\bf nyerő stratégia},
+    ha minden a stratégia mellett lejátszható játszmában $j$ nyer.
+
+    Ha döntetlen állhat elő -- $0 \not\in \rng\left( \hat{v} \right)$ --,
+    akkor az egyik játékos rendelkezik nyerő stratégiával. A nyerő
+    stratégiával rendelkező játékos $w(a_0, j_0)$: \[
+        w(b,j) = \begin{cases}
+            j & \text{ ha } b \in \mathcal{V} \text{ és } \hat{v}(b) = 1 \\
+            j' & \text{ ha } b \in \mathcal{V} \text{ és } \hat{v}(b) = -1 \\
+            j & \text{ ha van olyan} \left<b', j' \right> \text{ hogy }
+            \left<b, j \right> \rightarrow \left<b', j' \right> és
+            w(b', j') = j\\
+            j' & \text{ egyébként,}
+        \end{cases}
+    \]
+    ahol $j' \in (\mathcal{J} \setminus \{j\})$.
 \end{definicio}
+
+\begin{megjegyzes}
+    Ha a játékban van döntetlen végállás, akkor az egyik játékosnak van
+    garantáltan nem vesztő stratégiája.
+\end{megjegyzes}
