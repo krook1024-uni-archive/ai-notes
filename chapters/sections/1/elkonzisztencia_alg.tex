@@ -1,9 +1,192 @@
 \section{Élkonzisztencia algoritmusok}
 
+\begin{definicio}
+    Kényszerek terjesztése.
+    A \textbf{kényszerek terjesztése} során egy tekintett változó értékére
+    vonatkozó megszorítás következményeit a vele kényszerek útján kapcsolatban
+    álló változók értékeire vonatkozóan is kiterjesztjük, ezen változók
+    értékeire újabb megszorításokat alkalmazva.
+\end{definicio}
+
+\begin{definicio}
+    Élkonzisztencia algoritmusok.
+    Az \textbf{élkonzisztencia algoritmusok} feladata, a kényszerek
+    terjesztésének hatékony megvalósítása. Ezen algoritmusok egyaránt
+    alkalmazhatóak a keresés megkezdése előtt a probléma méretét csökkentő
+    előfeldolgozó lépésként, vagy akár a keresés közben is. Ezek közül mi az
+    előbbi lehetőséget vizsgáljuk meg.
+\end{definicio}
+
 \subsection{AC1}
+
+Az AC-1 (gyakorlatban nem használt) algoritmus egyszerű naiv megközelítés
+segítségével mutatja be a kényszerek terjesztésének ötletét.
+
+\begin{definicio}
+    Felülvizsgálat.
+    Az $R_{x,y}$ \textbf{kényszer felülvizsgálat}a során a
+    $\langle \mathcal{V}, \mathcal{D}, \mathcal{C} \rangle$
+    bináris kényszereket tartalmazó véges kényszerkielégítési problémát a
+    $\langle \mathcal{V}, \mathcal{D}', \mathcal{C}' \rangle$
+    problémával helyettesítjük, ahol \[
+    \mathcal{D}' =
+    \begin{cases}
+        \{a : a \in \mathcal{D}(x) \land b \in D(y) \land \langle a, b\rangle \in R_{x,y}\}
+        &\text{ ha } z=x \\
+        \mathcal{D}(z)
+        &\text{ egyébként.}
+    \end{cases}
+    .\]
+\end{definicio}
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetKwFunction{FACone}{AC1}
+    \SetKwProg{Fn}{Function}{:}{}
+    \Fn{\FACone{$\langle \mathcal{V}, \mathcal{D}, \mathcal{C} \rangle$}}
+    {
+        \Repeat{$\mathcal{D} = \mathcal{D}'$}{
+            $\mathcal{D}' \gets \mathcal{D}$ \;
+            \ForAll{$R_{x,y} \in \mathcal{C}$}
+            {
+                $\mathcal{D} \gets
+                \revise\left(R_{x,y}, \langle \mathcal{V}, \mathcal{D},
+                \mathcal{C} \rangle  \right)$
+            }
+        }
+        \KwRet{$\langle \mathcal{V}, \mathcal{D}, \mathcal{C} \rangle$}\;
+    }
+    \caption{AC-1}
+\end{algorithm}
 
 \subsection{AC3}
 
+Az AC-3 algoritmus (Mackworth) egy már a gyakorlatban is használható
+algoritmus, amely egy sorban tartja nyilván azokat a kényszereket, amelyeket
+felül kell vizsgálni.
+
+Ha $R_{x,y}$ felülvizsgálat során az  $x$ változó tartománya megváltozik, akkor
+minden olyan kényszer ismét bekerül a sorba, amely $R_{y,x}$ alakú.
+
+Az algoritmus akkor fejeződik be, mikor elfogytak a sorból a kényszerek.
+
+Az algoritmus időbonyolultsága $\mathcal{O}(n^2 \cdot d^3)$.
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetKwFunction{FACthree}{AC3}
+    \SetKwProg{Fn}{Function}{:}{}
+    \Fn{\FACthree{$\langle \mathcal{V}, \mathcal{D}, \mathcal{C} \rangle$}}
+    {
+        \While{$W \neq \varnothing$}{
+            remove an $R_{x,y}$ constraint from $W$\;
+            $\mathcal{D}' \gets \mathcal{D}$ \;
+            $\mathcal{D} \gets
+            \revise\left(R_{x,y}, \langle \mathcal{V}, \mathcal{D},
+            \mathcal{C} \rangle  \right)$\;
+            \If{$\mathcal{D}' \neq \mathcal{D}$}{
+                \eIf{$\mathcal{D}(x) = \varnothing$}{
+                    \KwRet{failure}\;
+                }{%
+                    \ForAll{$R_{u,w} \in \{R_{u,w} : R_{u,w} \in
+                        \mathcal{C} \land w = x\} $}{
+                        $W \gets W \cup \{R_{u,w}\}$ \;
+                    }
+                }
+            }
+        }
+        \KwRet{$\langle \mathcal{V}, \mathcal{D}, \mathcal{C} \rangle$}\;
+    }
+    \caption{AC-3}
+\end{algorithm}
+
 \subsection{AC4}
+
+Az AC-4 algoritmus (Mohr és Henderson) két előre elkészített
+adatszerkezettel dolgozik:
+
+\begin{itemize}
+    \item minden $R_{x,y}$ kényszer és $v_x \in  \mathcal{D}(x)$ értékhez egy
+         számlálót rendelünk: \[
+             C_{x,v_x,y} =
+             \card \{v_y : v_y \in \mathcal{D}(y) \land \langle v_x, v_y \rangle \in R_{x,y}\}
+         ,\]
+     \item az $x$ változó minden $v_x \in \mathcal{D}(x)$ értékéhez egy halmazt
+         rendelünk: \[
+            S_{x,v_x} = \{
+                \left<y, v_y \right> :
+                v_y \in \mathcal{D}(y) \land
+                \left<v_y, v_x \right> \in R_{y,x}
+            \}
+        ,\]
+        amely megmutatja, hogy mely $y$ változók mely $v_y \in \mathcal{D}(y)$ értékeihez
+        számoltuk hozzá $v_x$-et.
+\end{itemize}
+
+Jelölje $\mathcal{D}_{-\left<x, v_x \right>}$ azt a leképezést, amely
+$\mathcal{D}$ leképezéstől annyiban különbözik, hogy $v_x \not\in
+\mathcal{D}(x)$, vagyis $x$ nem veheti fel $v_x$ értéket: \[
+    \mathcal{D}_{-\left<x, v_x \right>}(z) =
+    \begin{cases}
+        \mathcal{D}(x)\setminus \{v_x\} & \text{ ha } z=x,\\
+        \mathcal{D}(z) & \text{ egyébként.}
+    \end{cases}
+\]
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetKwFunction{FACfourinit}{AC4-initialize}
+    \SetKwProg{Fn}{Function}{:}{}
+    \Fn{\FACfourinit{$\langle \mathcal{V}, \mathcal{D}, \mathcal{C} \rangle$}}
+    {
+        Compute $S$ \;
+        Compute $C$ \;
+        \ForAll{$\left<x, v_x \right> \in \{\left<x, v_x \right> : C_{x,v_x,y}
+            = 0\}$}{
+            $\mathcal{D} \gets \mathcal{D}_{-\left<x, v_x \right>}$
+        }
+        \KwRet{$S, C, \mathcal{D}$}\;
+    }
+    \caption{AC-4 inicializálás}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetKwFunction{FACfour}{AC4}
+    \SetKwProg{Fn}{Function}{:}{}
+    \Fn{\FACfour{$\langle \mathcal{V}, \mathcal{D}, \mathcal{C} \rangle$}}
+    {
+        $S, C, D \gets$ \FACfourinit{$\left< \mathcal{V}, \mathcal{D},
+        \mathcal{C} \right>$} \;
+
+        $W \gets \{\left<x, v_x \right> : C_{x,v_x,y} = 0\} $
+
+        \While{$W \neq \varnothing$}{
+            remove an $\left<x,v_x \right>$ pair from $W$ \;
+            \ForAll{$\left<y, v_y \right> \in S_{x, v_x}$}{
+                $C_{y, v_y, x} \gets C_{y, v_y, x} - 1$ \;
+                \If{$C_{y, v_y, x} = 0$ \textbf{and} $v_y \in \mathcal{D}_y$}
+                {
+                $\mathcal{D} \gets \mathcal{D}_{-\left<y, v_y \right>}$ \;
+                insert the $\left<y, v_y \right>$ pair into $W$\;
+                }
+            }
+        }
+        \KwRet{$S, C, \mathcal{D}$}\;
+    }
+    \caption{AC-4}
+\end{algorithm}
+
+Az {\bf AC-4 algoritmus} egy váltótó-érték párokat tartalmazó munkahalmaz
+segítségével végzi el feladatát. Azon értékek, amelyek által $C$ számlálója $0$-ra
+csökken törölni kell a változó tartományából. A munkahalmazba a törtölt értékek
+kerülnek, mert a tőlük függő értékek számlálóit csökkenteni kell. Ezek gyors
+felderítésében segít $S$.
+
+\begin{megjegyzes}
+    Az AC-4 algoritmus időbonyolultsága: $\mathcal{O}(n^2 \cdot d^2)$. Ennek ellenére valódi
+    problémák esetében sok esetben az AC-3 algoritmus teljesít jobban (Richard
+    J.  Wallace).
+\end{megjegyzes}
 
 \subsection{Visszalépéses kereső}
