@@ -83,6 +83,27 @@ ami egy probléma formális megadására szolgál.
     \end{itemize}
 \end{definicio}
 
+\subsubsection{Az állapottérgráf jellemzése}
+
+$b$: Az {\bf elágazási tényező} (branching factor) a tetszőleges
+állapotból közvetlenül elérhető állapotok maximális száma. \[
+\max \{\card \{b:a \Rightarrow b\} : a \in \mathcal{A})\}
+.\]
+
+$d$ : A {\bf legsekélyebb megoldás} a legkevesebb operátoralkalmazás
+segítségével elérhető célállapot eléréshez szükséges operátoralkalmazások száma.
+(A legrövidebb megoldás hossza. A célállapotok minimális mélysége.)
+A legkisebb olyan $i$ amely esetén van olyan állapotsorozat, hogy \[
+    a_0 \Rightarrow a_1, \quad a_1 \Rightarrow a_2 \quad \ldots \quad a_{i-1}
+    \Rightarrow a_i,\quad a_i \in \mathcal{C}
+.\]
+
+$m$ : A {\bf csomópontok maximális mélysége}. A legnagyobb olyan $i$, amely esetén
+van olyan állapotsorozat, hogy \[
+    a_0 \Rightarrow a_1,\quad a_1 \Rightarrow a_2 \quad \ldots \quad a_{i-1}
+    \Rightarrow a_i
+.\]
+
 % TODO
 
 \subsection{Költség és heurisztika fogalmak}

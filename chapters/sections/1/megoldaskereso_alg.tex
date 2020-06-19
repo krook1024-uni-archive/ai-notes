@@ -2,16 +2,239 @@
 
 \subsection{Fakereső algoritmusok}
 
+Az általános fakeresési algoritmus informális leírása:
+
+\begin{algorithm}[H]
+    \Fn{\Ftreesearch{probléma, stratégia}}
+    {
+        a probléma kezdeti állapotából kiindulva inicializáld
+        a keresési fát \;
+        \Loop{}{
+            \If{nincs kifejtendő csomópont}{\KwRet{kudarc}}
+
+            a stratégiának megfelelően válassz ki kifejtésre egy
+            levélcsomópontot
+
+            \eIf{a csomópont célállapotot tartalmaz}{
+                \KwRet{a hozzá tartozó megoldás}
+            }{
+                fejtsd ki a csomópontot és az eredményül kapott csomópontokat, %
+                és add a keresési fához \;
+            }
+        }
+    }
+    \caption{Általános fakeresési algoritmus informális leírása}
+\end{algorithm}
+
+\begin{definicio}
+    Perem.
+
+    A legenerált, kifejtésre váró csomópontokat külön nyilvántartjuk, ez a {\bf
+    perem}. Ezt a gyakorlatban általában egy várakozási sorként (queue) szokás
+    implementálni.
+\end{definicio}
+
+\begin{definicio}
+    Az algoritmusok hatékonyságának értékelése.
+
+    A problémamegoldó algoritmus kimenete vagy kudarc, vagy egy megoldás (egyes
+    algoritmusok végtelen hurokba kerülhetnek és soha nem térnek vissza válasszal).
+    Mi az algoritmusok hatékonyságát négyféle módon fogjuk értékelni:
+    \begin{itemize}
+        \item {\bf Teljesség (completeness)}: az algoritmus generáltan megtalál
+            egy megoldást, amennyiben létezik megoldás?
+        \item {\bf Optimalitást (optimality)}: a stratégia megtalálja az optimális megoldást?
+        \item {\bf Időigény (time complexity)}: mennyi ideig tart egy megoldás megtalálása?
+        \item {\bf Tárigény (space complexity)}: a keresés elvégzéséhez mennyi
+            memóriára van szükség?
+    \end{itemize}
+\end{definicio}
+
 \subsection{Gráfkereső algoritmusok}
+
+% TODO
 
 \subsection{Szélességi kereső}
 
+A {\bf szélességi keresés (breadth-first search)} egy egyszerű keresési
+stratégia, ahol először a gyökércsomópontot fejtjük ki, majd a következő
+lépésben az összes gyökércsomópontból generált csomópontot, majd azok követőit,
+stb.
+
+Általánosságban {\bf a keresési stratégia minden adott mélységű csomópontot hamarabb
+fejt ki, mielőtt bármelyik, egy szinttel lejjebbi csomópontot kifejtené}.
+
+A szélességi keresést meg lehet valósítani a FA-KERESÉS algoritmussal egy olyan
+üres peremmel, amely egy először-be-először-ki (first-in-first-out – FIFO) sor,
+biztosítva ezzel, hogy a korábban meglátogatott csomópontokat az algoritmus
+korábban fejti ki.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{bfs}
+    \caption{Szélességi keresés egy egyszerű bináris fában}
+    \label{fig:bfs}
+\end{figure}
+
+\subsubsection{Jellemzés}
+
+\begin{itemize}
+    \item {\bf Időbonyolultság}: $1 + b + b^2 + \ldots + b^{d+1} - b \in O(b^{d+1})$
+    \item {\bf Tárbonyolultság}: $1 + b + b^2 + \ldots + b^{d+1} - b \in O(b^{d+1})$
+    \item {\bf Teljesség}: teljes, ha $b$ véges,
+    \item {\bf Optimalitás}: optimális, ha minden költség egységnyi.
+\end{itemize}
+
 \subsection{Mélységi kereső}
+
+A {\bf mélységi keresés (depth-first search)} mindig a keresési fa aktuális
+peremében a legmélyebben fekvő csomópontot fejti ki. A keresés azonnal a fa
+legmélyebb szintjére jut el, ahol a csomópontoknak már nincsenek követőik.
+Kifejtésüket követően kikerülnek a peremből és a keresés "visszalép" ahhoz a
+következő legmélyebben fekvő csomóponthoz, amelynek vannak még ki nem fejtett
+követői.
+
+Ez a stratégia egy olyan FA-KERESÉS függvénnyel implementálható, amelynek a
+sorbaállító függvénye az {\it utolsónak-be-elsőnek-ki (last-in-first-out,
+LIFO)}, más néven verem. A mélységi keresést szokás a FA-KERESÉS függvény
+alternatívájaként egy rekurzív függvénnyel is implementálni, amely a
+gyermekcsomópontokkal meghívja önmagát.
+
+A mélységi keresés nagyon szerény tárigényű. Csak egyetlen, a
+gyökércsomóponttól egy levélcsomópontig vezető utat kell tárolnia, kiegészítve
+az út minden egyes csomópontja melletti kifejtetlen csomópontokkal. Egy
+kifejtett csomópont el is hagyható a memóriából, feltéve, hogy az összes
+leszármazottja meg lett vizsgálva. Egy $b$ elágazási tényezőjű és m maximális
+mélységű állapottér esetén a mélységi keresés tárigénye $b\cdot m + 1$.
+
+\subsubsection{Jellemzés (fakeresőként)}
+
+\begin{itemize}
+    \item {\bf Időbonyolultság}: $1 + b + b^2 + \ldots + b^m \in O(b^m)$
+    \item {\bf Tárbonyolultság}: $1 + b\cdot m \in O(b \cdot m)$, feltéve, hogy
+        minden olyan csomópontot elhagyunk, amely összes leszármazottja meg
+        lett vizsgálva
+    \item {\bf Teljesség}: csak véges körmentes gráfban teljes
+    \item {\bf Optimalitás}: nem garantál optimális megoldásokat
+\end{itemize}
 
 \subsection{Visszalépéses kereső}
 
+A mélységi keresés {\bf visszalépéses keresésnek (backtracking search)} nevezett
+változata még kevesebb memóriát használ. A visszalépéses keresés az összes
+követő helyett egyidejűleg csak egy követőt generál.  Minden részben kifejtett
+csomópont emlékszik, melyik követője jön a legközelebb. Ily módon csak $O(m)$
+memóriára van szükség, $O(b\cdot m)$ helyett. A visszalépéses keresés még egy memória-
+(és idő-) spóroló trükkhöz folyamodik. Az ötlet a követő csomópont generálása
+az aktuális állapot módosításával, anélkül hogy az állapotot átmásolnánk. Ezzel
+a memóriaszükséglet egy állapotra és $O(m)$ cselekvésre redukálódik. Ahhoz, hogy
+az ötlet működjön, amikor visszalépünk, hogy a következő követőt generáljuk,
+mindegyik módosítást vissza kell tudnunk csinálni. Nagy állapottérrel
+rendelkező problémák esetén, mint például robot-összeszerelés esetén, az ilyen
+módszerek lényegesek a sikerességhez.
+
+A mélységi keresés hátrányos tulajdonsága, hogy egy rossz választással egy
+hosszú (akár végtelen) út mentén lefelé elakadhat, miközben például egy más
+döntés elvezetne a gyökérhez közeli megoldáshoz. A legrosszabb esetben a
+mélységi keresés a keresési fában az összes $O(b^m)$ csomópontot generálni fogja,
+ahol $m$ a csomópontok maximális mélysége. Jegyezzük meg, hogy $m$ sokkal nagyobb
+lehet, mint $d$ (a legsekélyebb megoldás mélysége), és korlátlan fák esetén
+értéke végtelen.
+
+\begin{megjegyzes}
+    A visszalépéses kereső használatával a mélységi keresés tárbonyolultsága
+    csökkenthető tovább.
+\end{megjegyzes}
+
+\subsubsection{Jellemzés}
+
+\begin{itemize}
+    \item {\bf Időbonyolultság}: $1 + b + b^2 + \ldots + b^m \in O(b^m)$
+    \item {\bf Tárbonyolultság}: $1 + m \in O(m)$
+    \item {\bf Teljesség}: csak véges körmentes gráfban teljes
+    \item {\bf Optimalitás}: nem garantál optimális megoldásokat
+\end{itemize}
+
 \subsection{Egyenletes költségű (optimális kereső)}
+
+A szélességi keresés optimális, ha minden lépés költsége azonos, mert mindig a
+legsekélyebb ki nem fejtett csomópontot fejti ki. Egyszerű általánosítással egy
+olyan algoritmust találhatunk ki, amely tetszőleges lépésköltség mellett
+optimális. Az {\bf egyenletes költségű keresés (uniform cost search)} mindig a
+legkisebb útköltségű $n$ csomópontot fejti ki először, nem pedig a legkisebb
+mélységű csomópontot. Egyszerűen belátható, hogy a szélességi keresés is
+egyenletes költségű keresés, amennyiben minden lépésköltség azonos.
+
+Az egyenletes költségű keresés nem foglalkozik azzal, hogy {\it hány} lépésből
+áll egy bizonyos út, hanem csak az összköltségükkel törődik. Emiatt mindig
+végtelen hurokba kerül, ha egy csomópont kifejtése zérus költségű cselekvéshez
+és ugyanahhoz az állapothoz való visszatérést eredményez (például a NOOP
+cselekvés).
+
+A teljességet csak úgy garantálhatjuk, hogy minden lépés költsége
+egy kis pozitív e konstansnál nagyobb, vagy azzal egyenlő. Ez a feltétel egyben
+az optimalitás elégséges feltétele is. Ez azt jelenti, hogy egy út költsége az
+út mentén mindig növekszik. Ebből a tulajdonságból látszik, hogy az algoritmus
+a csomópontokat mindig a növekvő útköltség függvényében fejti ki. Azaz az első
+kifejtésre kiválasztott célcsomópont egyben az optimális megoldás is
+(emlékezzünk arra, hogy a FA-KERESÉS a célállapottesztet csak a kifejtésre
+megválasztott csomópontokra alkalmazza).
 
 \subsection{Legjobbat először kereső}
 
-\subsection{Az A$^*$ algoritmus}
+Informált keresési módszer.
+
+A {\bf mohó legjobbat-először keresés (greedy best-first search)} azt a
+csomópontot fejti ki a következő lépésben, amelyiknek az állapotát a
+legközelebbinek ítéli a célállapothoz, abból kiindulva, hogy így gyorsan
+megtalálja a megoldást. A csomópontokat az algoritmus tehát az $f(n) = h(n)$
+heurisztikus függvénnyel értékeli ki.
+
+\subsubsection{Jellemzés}
+
+\begin{itemize}
+    \item {\bf Időbonyolultság}: $O(b^m)$
+    \item {\bf Tárbonyolultság}: $O(b^m)$
+    \item {\bf Teljesség}: nem teljes
+    \item {\bf Optimalitás}: nem optimális
+\end{itemize}
+
+\begin{megjegyzes}
+    Az idő- és tárbonyolultság nagyban függ a heurisztikus függvény
+    minőségétől.
+\end{megjegyzes}
+
+\subsection{Az A* algoritmus}
+
+Informált keresési módszer.
+
+A legjobbat-először keresés leginkább ismert változata az A* keresés. A
+csomópontokat úgy értékeli ki, hogy összekombinálja $g(n)$ értékét – az aktuális
+csomópontig megtett út költsége – és $h(n)$ értékét – vagyis az adott
+csomóponttól a célhoz vezető út költségének becslőjét: \[
+    f(n) = g(n) + h(n)
+.\]
+
+Mivel $g(n)$ megadja a kiinduló csomóponttól az n csomópontig számított
+útköltséget, és h(n) az n csomóponttól a célcsomópontba vezető legolcsóbb
+költségű út költségének becslője, így az alábbi összefüggést kapjuk:
+\[
+    f(n) = \text{a legolcsóbb, az n csomóponton keresztül vezető megoldás
+    becsült költsége}
+.\]
+
+Így amennyiben a legolcsóbb megoldást keressük, ésszerű először a legkisebb
+$g(n) + h(n)$ értékkel rendelkező csomópontot kifejteni. Ezen stratégia
+kellemes tulajdonsága, hogy ez a stratégia több mint ésszerű: amennyiben a $h$
+függvény eleget tesz bizonyos feltételeknek, az A* keresés teljes és optimális.
+
+\subsubsection{Jellemzés}
+
+\begin{itemize}
+    \item {\bf Időbonyolultság}: $O(b^m)$
+    \item {\bf Tárbonyolultság}: $O(b^m)$
+    \item {\bf Teljesség}: teljes
+    \item {\bf Optimalitás}: optimális, ha $h(n)$ konzisztens (vagyis monoton),
+        valamint elfogadható heurisztika, azaz soha nem becsül felül (ez
+        következik a konzisztenciából)
+\end{itemize}

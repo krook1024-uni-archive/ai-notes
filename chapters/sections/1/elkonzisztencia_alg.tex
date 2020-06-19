@@ -112,9 +112,6 @@ segítségével mutatja be a kényszerek terjesztésének ötletét.
 \end{definicio}
 
 \begin{algorithm}[H]
-    \DontPrintSemicolon
-    \SetKwFunction{FACone}{AC1}
-    \SetKwProg{Fn}{Function}{:}{}
     \Fn{\FACone{$\langle \mathcal{V}, \mathcal{D}, \mathcal{C} \rangle$}}
     {
         \Repeat{$\mathcal{D} = \mathcal{D}'$}{
@@ -145,9 +142,6 @@ Az algoritmus akkor fejeződik be, mikor elfogytak a sorból a kényszerek.
 Az algoritmus időbonyolultsága $\mathcal{O}(n^2 \cdot d^3)$.
 
 \begin{algorithm}[H]
-    \DontPrintSemicolon
-    \SetKwFunction{FACthree}{AC3}
-    \SetKwProg{Fn}{Function}{:}{}
     \Fn{\FACthree{$\langle \mathcal{V}, \mathcal{D}, \mathcal{C} \rangle$}}
     {
         \While{$W \neq \varnothing$}{
@@ -206,9 +200,6 @@ $\mathcal{D}$ leképezéstől annyiban különbözik, hogy $v_x \not\in
 \]
 
 \begin{algorithm}[H]
-    \DontPrintSemicolon
-    \SetKwFunction{FACfourinit}{AC4-initialize}
-    \SetKwProg{Fn}{Function}{:}{}
     \Fn{\FACfourinit{$\langle \mathcal{V}, \mathcal{D}, \mathcal{C} \rangle$}}
     {
         Compute $S$ \;
@@ -223,9 +214,6 @@ $\mathcal{D}$ leképezéstől annyiban különbözik, hogy $v_x \not\in
 \end{algorithm}
 
 \begin{algorithm}[H]
-    \DontPrintSemicolon
-    \SetKwFunction{FACfour}{AC4}
-    \SetKwProg{Fn}{Function}{:}{}
     \Fn{\FACfour{$\langle \mathcal{V}, \mathcal{D}, \mathcal{C} \rangle$}}
     {
         $S, C, D \gets$ \FACfourinit{$\left< \mathcal{V}, \mathcal{D},

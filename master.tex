@@ -19,6 +19,7 @@
 
 % document settings
 \setlength{\parindent}{0cm}
+\graphicspath{ {./figures/} }
 
 % figure support
 \usepackage{import}
@@ -30,6 +31,16 @@
     \def\svgwidth{\columnwidth}
     \import{./figures/}{#1.pdf_tex}
 }
+
+%setup alg2e
+\DontPrintSemicolon
+\SetKwFunction{Ftreesearch}{Fa-Kereses}
+\SetKwFunction{FACone}{AC1}
+\SetKwFunction{FACthree}{AC3}
+\SetKwFunction{FACfourinit}{AC4-initialize}
+\SetKwFunction{FACfour}{AC4}
+\SetKwProg{Fn}{function}{:}{end function}
+\SetKwFor{Loop}{loop}{do}{end loop}
 
 % Environments
 \makeatother
