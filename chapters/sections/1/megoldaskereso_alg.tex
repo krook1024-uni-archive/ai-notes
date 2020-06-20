@@ -52,7 +52,62 @@ Az általános fakeresési algoritmus informális leírása:
 
 \subsection{Gráfkereső algoritmusok}
 
-% TODO
+Eddig figyelmen kívül hagytuk a keresés egyik legfontosabb megoldandó
+problémáját: a már korábban egy másik úton megtalált és kifejtett állapotok
+ismételt kifejtéséből adódó időpazarlást. Néhány probléma esetén ezen lehetőség
+soha nem merül fel, mert az állapottér egy fa, és minden állapotba csak
+egyetlen módon lehet eljutni. A 8-királynő probléma hatékony megfogalmazása –
+amikor minden új királynőt a bal szélső szabad oszlopba helyezzük – nagyrészt
+épp ennek köszönheti hatékonyságát, vagyis hogy minden egyes állapotba csak
+egyetlen úton lehet eljutni. Ha a 8-királynő problémát úgy fogalmazzuk meg,
+hogy egy királynőt bármelyik oszlopban el lehet helyezni, akkor az $n$ királynőt
+tartalmazó minden állapotot $n!$ különböző úton el lehet érni.
+
+Számos problémánál azonban elkerülhetetlenek a megismételt állapotok. Ezek közé
+tartozik az összes olyan probléma, amelyben az operátorok reverzíbilisek.
+Többek között ebbe a csoportba tartoznak az útkeresési problémák és a csúszó
+lapka fejtörő játékok. Az ezen problémákhoz tartozó keresési fák végtelenek, de
+ha a megismételt állapotok egy részét levágjuk, akkor a keresési fát véges
+méretűre vághatjuk, ezáltal a keresési fának csak az állapottér gráfot
+kifeszítő részét generálva.
+
+Az ismétlődő állapotok tehát a megoldható problémákat megoldhatatlan
+problémákká alakítják, amennyiben az algoritmus nem képes ezeket az állapotokat
+detektálni. A detektálás általában azt jelenti, hogy az új kifejtendő
+csomópontot a már kifejtett csomópontokkal hasonlítjuk össze. Egyezés esetén az
+adott csomóponthoz az algoritmus két utat talált, és valamelyiket eldobhatja.
+
+\begin{algorithm}[H]
+    \Fn{\Fgraphsearch{probléma, perem} {\bf returns} egy megoldás vagy kudarc}{
+        zárt lista $\gets$ egy üres halmaz \;
+        perem $\gets$ Beszúr(Csomópontot-Létrehoz(Kiinduló-állapot[probléma]), perem) \;
+        \Loop{}{
+            \lIf{Üres?(perem)} { \KwRet{kudarc} }
+            csomópont   $\gets$ Vedd-Az-Első-Elemet(perem) \;
+            \lIf{Cél-Teszt[probléma](Állapot[csomópont])}{\KwRet{Megoldás(csomópont)}}
+            \If{Állapot[csomópont] nem eleme a zárt listának}{
+                adjuk hozzá az Állapot[csomópont]-ot a zárt listához \;
+                perem $\gets$ Beszúr-Mind(Kifejt(csomópont, probléma), perem)
+            }
+        }
+    }
+
+    \caption{Az általános gráfkereső algoritmus}
+\end{algorithm}
+
+\begin{megjegyzes}
+    A zártak listáját érdemes egy hash táblával implementálni, hogy hatékonyan
+    tudjuk ellenőrizni a már meglátogatott csomópontokat.
+\end{megjegyzes}
+
+\subsubsection{Jellemzés}
+
+\begin{itemize}
+    \item {\bf Időbonyolultság}: $1 + b + b^2 + \ldots + b^{d+1} - b \in O(b^{d+1})$
+    \item {\bf Tárbonyolultság}: $1 + b + b^2 + \ldots + b^{d+1} - b \in O(b^{d+1})$
+    \item {\bf Teljesség}: teljes, ha $b$ véges,
+    \item {\bf Optimalitás}: optimális, ha minden költség egységnyi.
+\end{itemize}
 
 \subsection{Szélességi kereső}
 
