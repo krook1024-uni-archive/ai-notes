@@ -32,3 +32,108 @@
 \end{definicio}
 
 \subsection{Rezolúciókalkulus ítéletlogikában}
+
+\begin{definicio}
+    Konjunktív normálforma (KNF).
+
+    Egy mondatot, amelyet literálok diszjunkcióinak konjunkcióival fejezünk ki,
+    {\bf konjunktív normál formájúnak} (conjunctive normal form) vagy KNF
+    formájúnak nevezünk.
+
+    Például: \[
+        (X_1 \lor X_2 \lor \ldots X_n) \land
+        (Y_1 \lor Y_2 \lor \ldots Y_n)
+    .\]
+\end{definicio}
+
+\begin{definicio}
+    Rezolúció.
+    A rezolúció egy levezetési eljárás, mely alapja az egyik automatikus
+    tételbizonyítási módszernek, elméletnek, a rezolúciós kalkulusnak.
+
+    A rezolúció szintatikus módszer; alapja, hogy két logikai formulához
+    hozzárendeljük egy speciális következményformulájukat, az ún.
+    {\bf rezolvens}üket.
+\end{definicio}
+
+\begin{definicio}
+    Zárt klóz.  Véges sok negálatlan vagy negált zárt atomi formulából
+    (literálból) diszjunkció által összetett formula egy {\bf zárt klóz}t
+    alkolt. Például \[
+        X \lor Y \lor Z
+    .\]
+
+    Ennek speciális esete a {\bf Horn-klóz}, amely olyan zárt klóz, mely
+    legfeljebb egy negálatlan atomot tartalmaz, a többi tagja viszont negált.
+    Például \[
+        A \lor \lnot B \lor \lnot C \lor \lnot D
+    .\]
+\end{definicio}
+
+\begin{megjegyzes}
+    A rezolúció felhasználható például SAT-problémák (kielégíthetőségi
+    problémák) megoldására, azaz amikor egy formula KNF alakjáról el kell
+    dönteni, hogy található-e hozzá olyan interpretáció, ahol a formula
+    kielégíthető.
+\end{megjegyzes}
+
+\begin{megjegyzes}
+    A rezolúció azért használatos, mert lényegesen gyorsabb, mint ha az
+    ítéletlogikai szemantikai definíciók mentén számolnánk.
+\end{megjegyzes}
+
+A rezolúción alapuló következtetési eljárások az ellentmondásokra vezető
+bizonyítások elvén működnek. Tehát annak megmutatásához, hogy $\text{TB}
+\models \alpha$, azt mutatjuk meg, hogy a $(\text{TB} \land \lnot \alpha)$
+kielégíthetetlen. Ezt az ellentmondás bizonyításával végezzük el.
+
+\begin{algorithm}[H]
+    \label{alg:rezolval}
+    \caption{Egy egyszerű rezolúciós algoritmus ítéletkalkulushoz}
+    \DontPrintSemicolon
+    \SetKwFunction{FIDthree}{ID3}
+    \SetKwProg{Fn}{Function}{:}{}
+    \Fn{\Frezolval{TB, $\alpha$}}
+    {
+        \Input{TB, a tudásbázis, egy ítéletkalkulus mondat\\$\alpha$, a
+        lekérdezés, egy ítéletkalkulus mondat}
+
+        klózok $\gets$ a TB $\land \lnot \alpha$ mondatot reprezentáló CNF formulájú klózok halmaza \;
+
+        új  $\gets \{ \}$ \;
+
+        \Loop{}{
+            \ForEach{$C_i, C_j$ {\bf in} klózok}{
+                rezolvensek $\gets$ \Frezolval{$C_i, C_j$} \;
+
+                \lIf{rezolvensek tartalmazzák az üres klózt}{
+                    \KwRet{igaz}
+                }
+
+                új $\gets$ új  $\cup$ rezolvensek
+            }
+            \lIf{új $\subseteq$ klózok}{\KwRet{hamis}}
+        }
+    }
+\end{algorithm}
+
+A rezolúció algoritmust mutatja a \ref{alg:rezolval}. algoritmus. Először a
+$(\text{TB} \land \lnot \alpha)$-t konvertáljuk CNF formára. Majd a rezolúciós
+szabályt alkalmazzuk a létrejövő klózokra. Minden egyes párt, amely kiegészítő
+literálokat tartalmaz, rezolválunk, hogy egy új klózt hozzunk létre, amelyet
+hozzáadunk a halmazhoz, ha még nem volt jelen. A folyamat addig folytatódik,
+amíg a következő két dolog közül valamelyik meg nem történik:
+\begin{itemize}
+    \item nincs több új klóz, amit hozzá lehet adni, ilyen esetben $\alpha$ nem
+        vonzza maga után  $\beta$-t
+    \item a rezolúció alkalmazása egy üres klózra vezet, amely esetben $\alpha
+        \models \beta$.
+\end{itemize}
+
+\begin{tetel}
+    Az üres klóz -- egy diszjunkt nélküli diszjunkció -- ekvivalens a {\it
+    Hamis} értékkel, mert a diszjunkció akkor igaz csak, ha legalább az egyik
+    diszjunkt igaz. Vagyis beláthatjuk, hogy az üres klóz ellentmondást
+    reprezentál, hogy megfigyeljük azt, hogy az üres klóz két kiegészítő
+    egységklóz, mint amilyen az $S$ és $\lnot S$, rezolválásából származik.
+\end{tetel}
