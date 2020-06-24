@@ -10,7 +10,7 @@ Az általános fakeresési algoritmus informális leírása:
         a probléma kezdeti állapotából kiindulva inicializáld
         a keresési fát \;
         \Loop{}{
-            \If{nincs kifejtendő csomópont}{\KwRet{kudarc}}
+            \lIf{nincs kifejtendő csomópont}{\KwRet{kudarc}}
 
             a stratégiának megfelelően válassz ki kifejtésre egy
             levélcsomópontot
@@ -226,14 +226,47 @@ végtelen hurokba kerül, ha egy csomópont kifejtése zérus költségű cselek
 és ugyanahhoz az állapothoz való visszatérést eredményez (például a NOOP
 cselekvés).
 
+Tegyük fel, hogy előállítjuk az $m$ csomópontot az $n$ csomópont gyermekekeként
+és be szeretnénk szúrni az adatbázisba, ahol $m$ már szerepel. Ennek az
+útköltségét jelöljük $g(m)$-mel, az újonnan beszúrni kívánt csomópont
+útköltségét pedig $g(n)+\text{költség}(\text{operátor})(n)$-nel. Ekkor ha
+\begin{itemize}
+    \item $g(m) \le g(n)+\text{költség}(\text{operátor})(n)$, akkor az $m$
+        csomópontot már sikerült ezelőtt kisebb költséggel előállítani, és nem
+        cseréljük le.
+    \item $g(m) > g(n)+\text{költség}(\text{operátor})(n)$, akkor az új csúcs
+        optimálisabb (tehát nem nagyobb költségű), lecseréljük.
+\end{itemize}
+
 A teljességet csak úgy garantálhatjuk, hogy minden lépés költsége
 egy kis pozitív e konstansnál nagyobb, vagy azzal egyenlő. Ez a feltétel egyben
-az optimalitás elégséges feltétele is. Ez azt jelenti, hogy egy út költsége az
-út mentén mindig növekszik. Ebből a tulajdonságból látszik, hogy az algoritmus
-a csomópontokat mindig a növekvő útköltség függvényében fejti ki. Azaz az első
-kifejtésre kiválasztott célcsomópont egyben az optimális megoldás is
-(emlékezzünk arra, hogy a FA-KERESÉS a célállapottesztet csak a kifejtésre
-megválasztott csomópontokra alkalmazza).
+az optimalitás elégséges feltétele is.
+
+Ez azt jelenti, hogy egy út költsége az út mentén mindig növekszik. Ebből a
+tulajdonságból látszik, hogy az algoritmus a csomópontokat mindig a növekvő
+útköltség függvényében fejti ki. Azaz az első kifejtésre kiválasztott
+célcsomópont egyben az optimális megoldás is (emlékezzünk arra, hogy a
+FA-KERESÉS a célállapottesztet csak a kifejtésre megválasztott csomópontokra
+alkalmazza).
+
+Ha $C^*$ az optimális út útköltsége, és minden útköltség legalább $e$,
+akkor az időbonyolultság $O(b^{1+(C^*/e)})$.
+
+Mivel az egyenletes költségű kereső mindent csomópontot tárol mindaddig,
+amíg megoldást nem talál, a tárigénye a szélességi keresőnél is rosszabb.
+
+Akkor használatos, mikor az útköltségek nem azonosak, amikor azonosak, akkor
+BFS-sel is jobban járunk.
+
+\subsubsection{Jellemzés}
+
+\begin{itemize}
+    \item {\bf Időbonyolultság}: lehet rosszabb, $O(b^d)$, mert felkutathat
+        nagy fákat; $O(b^{1+(C^*/e)})$
+    \item {\bf Tárbonyolultság}: $O(b^{1+(C^*/e)})$
+    \item {\bf Teljesség}: ha minden lépésköltség egy kis pozitív szám
+    \item {\bf Optimalitás}: ha minden lépésköltség egy kis pozitív szám
+\end{itemize}
 
 \subsection{Legjobbat először kereső}
 
@@ -244,6 +277,19 @@ csomópontot fejti ki a következő lépésben, amelyiknek az állapotát a
 legközelebbinek ítéli a célállapothoz, abból kiindulva, hogy így gyorsan
 megtalálja a megoldást. A csomópontokat az algoritmus tehát az $f(n) = h(n)$
 heurisztikus függvénnyel értékeli ki.
+
+A legjobbat-először keresés az általános FA-KERESÉS vagy GRÁF-KERESÉS
+algoritmusok olyan speciális esete, ahol egy csomópont kifejtésre való
+kiválasztása egy f(n) kiértékelő függvénytől (evaluation function) függ. A
+heurisztikáját nézi a csomópontnak, és a kiterjesztett szülőcsomópont, amit lát
+az utódokon heurisztika az alapján választja ki a legkisebb heurisztikával
+rendelkező gyermeket, és fogja azt kiterjeszteni.
+
+Hagyományosan a legkisebb értékű csomópontot választjuk kifejtésre, mert a
+kiértékelő függvény a céltól való távolságot méri.  A legjobbat-először keresés
+az eddigi általános keresési eljárások keretein belül egy prioritási sor
+segítségével implementálható, ami egy olyan adatstruktúra, mely a peremet a
+növekvő $f$-értékek szerint rendezi.
 
 \subsubsection{Jellemzés}
 
@@ -289,7 +335,50 @@ függvény eleget tesz bizonyos feltételeknek, az A* keresés teljes és optim�
     \item {\bf Időbonyolultság}: $O(b^m)$
     \item {\bf Tárbonyolultság}: $O(b^m)$
     \item {\bf Teljesség}: teljes
-    \item {\bf Optimalitás}: optimális, ha $h(n)$ konzisztens (vagyis monoton),
-        valamint elfogadható heurisztika, azaz soha nem becsül felül (ez
-        következik a konzisztenciából)
+    \item {\bf Optimalitás}:
+        \begin{itemize}
+            \item fakeresőként ha $h(n)$ elfogadható heurisztika
+            \item gráfkeresőként optimális, ha $h(n)$ konzisztens (vagyis
+                monoton), valamint elfogadható heurisztika, azaz soha nem
+                becsül felül (ez következik a konzisztenciából)
+        \end{itemize}
 \end{itemize}
+
+\begin{definicio}
+    Heurisztikus függvény.
+    Egy $\left<\mathcal{A}, k, \mathcal{C}, \mathcal{O} \right>$
+    állapottér-reprezentációhoz megadott heurisztika egy olyan \[
+        h : \mathcal{A} \mapsto \mathbb{N} \text{ függvény, melyre }
+        \forall c \in \mathcal{C} h(c) = 0
+    .\]
+
+    A heurisztika nem más mint egy becslés amely megmondja egy csúcsra nézve,
+    hogy melyik gyermeke felé induljon tovább a keresésben. A heurisztikus
+    kereső nem teljesen megbízható mivel a részfák még nincsenek legenerálva,
+    azaz nem lehetünk biztosak benne.
+
+    Egyes heurisztikákat perfekt heurisztikának nevezünk és egy ilyen
+    heurisztika legfeljebb $1+n*d$ csúcsot generál le, azaz ilyen heurisztika
+    eseté a csúcsok száma már csak lineáris függvénye a megoldás hosszának.(
+    Perfekt heurisztika egyébként nem létezik, mert ha lenne akkor már előre
+    ismernénk a megoldást - nem lenne értelme keresni.)
+\end{definicio}
+
+\begin{tetel}
+    $h(n)$ elfogadható heurisztika, ha soha nem becsli felül az $n$ csomópontot
+    keresztül a célállpothoz vezető út útköltségét.
+\end{tetel}
+
+\begin{definicio}
+    Konzisztencia.
+    Azt mondjuk, hogy a $h(n)$ heurisztikus függvény konzisztens, ha minden $n$
+    csomópontra és annak egy tetszőleges a cselekvéssel generált minden $n'$
+    utódcsomópontjára az $n$ csomóponttól elért cél becsült költsége nem kisebb, mint
+    az $n'$ -be kerülés lépésköltsége és az $n'$ csomóponttól elért cél becsült
+    költsége: \[
+        h(n) \le c (n, a, n') + h(n')
+    .\]
+    Ez az általános háromszög egyenlőtlenség (triangle inequality) egy formája,
+    amely azt fejezi ki, hogy egy háromszög egy oldala sem lehet hosszabb, mint
+    a két másik oldal összege.
+\end{definicio}

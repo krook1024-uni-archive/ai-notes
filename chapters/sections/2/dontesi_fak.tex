@@ -31,6 +31,36 @@
     attribútumok} (condition attributes) halmaza.
 \end{definicio}
 
+A döntési fa tanulás egyike a legegyszerűbb, mégis az eddigiekben az egyik
+legsikeresebbnek bizonyult tanulási algoritmusnak. Jó bevezetésként szolgál az
+induktív tanulás területén, és ráadásul könnyen implementálható. Először
+bemutatjuk a cselekvő alrendszert, majd megmutatjuk, hogy miképpen lehet
+tanítani. Mindeközben olyan elveket mutatunk be, amelyek az induktív tanulás
+minden területére jellemzők.
+
+\begin{definicio}
+    Induktív tanulás.
+    Cél, hogy pozitív és negatív példák alapján olyan logikai függvényt
+    állítsunk elő, ami igaz értéket ad a pozitív és hamisat a negatív példákra
+    és feltételezzük, hogy ha elég nagyszámú példánk van akkor helyes értéket
+    fogunk kapni előre nem látott példák esetén is.
+\end{definicio}
+
+\begin{definicio}
+    Döntési fa.
+
+    Egy döntési fa (decision tree) bemenetként egy attribútumokkal (attributes)
+    leírt objektumot vagy szituációt kap, és egy „döntést” ad vissza
+    eredményként – a bemenetre adott válasz jósolt értékét. A bemeneti
+    attribútumok lehetnek diszkrétek vagy folytonosak. Jelen tárgyalásban
+    diszkrét bemeneteket tételezünk fel. A kimeneti érték szintén lehet
+    diszkrét vagy folytonos; egy diszkrét értékkészletű függvény tanulását
+    osztályozás (classification) tanulásnak, míg a folytonos függvény tanulását
+    regressziónak (regression) nevezzük. Bináris (Boolean) osztályozásra fogunk
+    koncentrálni, ahol minden példát vagy igaznak (pozitív), vagy hamisnak
+    (negatív) sorolunk be.
+\end{definicio}
+
 \subsection{Az ID3 algoritmus}
 
 \begin{algorithm}[H]

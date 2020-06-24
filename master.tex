@@ -1,7 +1,7 @@
 \documentclass[a4paper]{report}
 
 \title{Mesterséges intelligencia alapjai jegyzet}
-\author{Molnár Antal Albert}
+\author{Molnár Antal Albert, Lovász Botond}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -18,9 +18,31 @@
 \usepackage[ruled,longend,linesnumbered]{algorithm2e}
 \usepackage[margin=2cm]{geometry}
 
+%\let\stdsubsection\subsection
+%\renewcommand\subsection{\clearpage\stdsubsection}
+
+%\newcommand{\chapterbreak}{\newpage}
+%\newcommand{\subsectionbreak}{\newpage}
+
 \usepackage{tikz}
 \usetikzlibrary{positioning}
 \tikzset{set/.style={draw,circle,inner sep=0pt,align=center}}
+
+\usepackage{etoolbox}
+
+%\preto{\section}{\clearpageafterfirst}
+%\preto{\subsection}{\filbreak}
+%\newcommand{\clearpageafterfirst}{%
+%  \gdef\clearpageafterfirst{\clearpage}%
+%}
+%
+
+\newtoggle{aftersection}
+\preto{\section}{\filbreak\global\toggletrue{aftersection}}
+\preto{\subsection}{\iftoggle{aftersection}{\global\togglefalse{aftersection}}{\filbreak}}
+\newcommand{\clearpageafterfirst}{%
+  \gdef\clearpageafterfirst{\clearpage}%
+}
 
 % document settings
 \setlength{\parindent}{0cm}
@@ -47,6 +69,8 @@
 \SetKwFunction{FACfour}{AC4}
 \SetKwFunction{Frezolval}{Rezolválás}
 \SetKwFunction{FACfour}{AC4}
+\SetKwFunction{Fbacktrack}{Visszalépéses-keresés}
+\SetKwFunction{Fbacktrackrec}{Rekurzív-Visszalépéses}
 \SetKwProg{Fn}{function}{:}{end function}
 \SetKwFor{Loop}{loop}{do}{end loop}
 \SetKwInOut{Input}{input}

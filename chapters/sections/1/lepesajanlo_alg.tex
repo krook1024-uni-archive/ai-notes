@@ -39,6 +39,23 @@ mélységi korláttal rekurzívan a következőképpen számítható:
     \end{cases}
 \]
 
+A MinMax algoritmus az optimális döntést az aktuális állapotból számítja ki,
+felhasználva az egyes követő állapotok minimax értékeinek kiszámítására a
+definiáló egyenletekből közvetlenül származtatott, egyszerű rekurzív formulát.
+A rekurzió egészen a falevelekig folytatódik, majd a minimax értékeket a fa
+mentén visszafelé terjesztjük, ahogy a rekurzió visszalép.  Bizonyos esetben
+például az algoritmus először rekurzív módon leereszkedik a három bal alsó
+csomóponthoz, a HASZNOSSÁG függvénnyel kiszámítva.  Majd az algoritmus előveszi
+ezen értékek minimumát és ezt adja vissza, ahogy a szülő csomóponthoz
+visszatér.
+
+Minden olyan ponton, ahol a támogatott játékos van döntési helyzetben, akkor ő maga
+számára a lehető legjobbat akarja, ezért a közvetlenül elérhető játé
+
+Az ellenfele önmagának akarja a legjobbat, viszont ami az ellenfélnek a legjobb, az a
+támogatott játékos számára a legrosszabb, tehát ezért van ebben az esetben minimum
+keresés ebben az implementációban.
+
 \subsection{NegaMax módszer}
 
 Az $b \in \mathcal{B}$ állás hasznossága $j \in \mathcal{J}$ (lépni következő)
@@ -53,6 +70,15 @@ számítható: \[
                & \text{ egyébként.}
     \end{cases}
 \]
+
+A NegaMax algoritmus esetében is hasonlóan kell gondolkodnunk, mint a MinMax
+módszernél.  Kiegészítés: A minimax algoritmus alkalmazásának egyik nehézsége,
+hogy egy játékhoz kétfajta heurisztikát is ki kell találni. Márpedig könnyű
+észre venni, hogy a két heurisztika között erős összefüggés van. Az összefüggés
+egyszerű szavakkal így írható le: A játék egy állapota az egyik játékosnak
+minél jobb, a másiknak annál rosszabb. Azaz az egyik játékos heurisztikája
+nyugodtan lehet a másik játékos heurisztikájának ellentéte (negáltja), vagyis
+$-1$-szerese. Tehát, elég lesz 1 db heurisztika.
 
 \subsection{Alfa-béta nyesés}
 
@@ -69,3 +95,23 @@ alfa-béta nyesést.
         \item $f(b,j,j,k) = f(b', j', j, k-1)$.
     \end{itemize}
 \end{definicio}
+
+A nyesés vagy metszés lehetővé teszi számunkra, hogy figyelmen kívül hagyjuk a
+keresési fa azon részeit, amelyek nincsenek befolyással a végső választásra.
+
+A heurisztikus kiértékelő függvények lehetővé teszik, hogy kimerítő keresés
+nélkül meg tudjuk becsülni egy adott állapot valódi hasznosságát.  Tehát a
+játékfa nagyobb részét is kihagyhatjuk adott esetben.
+
+A konkrét vizsgált technika az alfa-béta nyesés (alpha-beta pruning). Ha ezt
+egy standard minimax fára alkalmazzuk, ugyanazt az eredményt adja vissza, mint
+a minimax, a döntésre hatással nem lévő ágakat azonban lenyesi.  A célunk az,
+hogy meg tudjuk határozni a minimax döntést anélkül, hogy megkellene
+vizsgálnunk az összes levélcsomópontot.
+
+\begin{itemize}
+    \item $\alpha =$ az út mentén tetszőleges döntési pontban a MAX számára eddig
+        megtalált legjobb (azaz a legmagasabb értékű) választás értéke.
+    \item $\beta =$ az út mentén tetszőleges döntési pontban a MIN számára eddig
+        megtalált legjobb (azaz a legkisebb értékű) választás értéke.
+\end{itemize}
